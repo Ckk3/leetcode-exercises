@@ -1,49 +1,21 @@
 from typing import List
 
-
+# using vanAmsen solution
 class Solution:
     def candy(self, ratings: List[int]) -> int:
-        candies = []
-        if len(ratings) == 1:
-            candies.append(1)
-        else:
-            index_to_reprocess = set()
-            for i in range(len(ratings)):
-                if i == 0: 
-                    candies.append(2) if ratings[i] > ratings[i + 1] else candies.append(1)
-                    continue
-                
-                try:
-                    neighbour = 0
-                    if ratings[i - 1] < ratings[i]:
-                        neighbour = candies[i - 1]
-                        candies.append(neighbour + 1)
-                        continue
-                    elif ratings[i] > ratings[i + 1]:
-                        neighbour = 1
-                        candies.append(neighbour + 1)
-                        index_to_reprocess.add(i)
+        n = len(ratings)
+        candies = [1] * n 
 
-                        if ratings[i - 1] > ratings[i] and candies[i - 1] <= candies[i]:
-                            while True:
-                                try:
-                                    if ratings[i - 1] > ratings[i] and candies[i - 1] <= candies[i]:
-                                        candies[i - 1] += 1
-                                        i -= 1
-                                    else:
-                                        break
-                                except IndexError:
-                                    break
-                        continue
-                except IndexError:
-                    if ratings[i - 1] < ratings[i]:
-                        max_neighbour = candies[i - 1]
-                        candies.append(max_neighbour + 1)
-                        continue
-                
-                candies.append(1)
+        for i in range(1, n):
+            if ratings[i] > ratings[i-1]:
+                candies[i] = candies[i-1] + 1
+
+        for i in range(n-2, -1, -1):
+            if ratings[i] > ratings[i+1]:
+                candies[i] = max(candies[i], candies[i+1] + 1)
         
         return sum(candies)
+
         
 
 
